@@ -5,6 +5,8 @@
     import { useRoute, useRouter } from 'vue-router'
     import AddEditNote from '@/components/Notes/AddEditNote.vue';
     import { useStoreNotes } from '@/stores/StoreNotes.js'
+    
+    import { useWatchCharacters } from '@/use/useWatchCharacters.js'
 
 /** Router */
     const route = useRoute()
@@ -23,10 +25,13 @@
         router.push('/')
     }
 
+/** Watch Content */
+    useWatchCharacters(noteContent, 300)
+
 </script>
 
 <template>
-    
+
     <div class="edit-note">
         <AddEditNote
         v-model="noteContent"

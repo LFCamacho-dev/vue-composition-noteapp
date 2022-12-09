@@ -2,6 +2,7 @@
 /** Imports */
     import { ref } from 'vue'
     import { useStoreNotes } from '@/stores/StoreNotes.js'
+    // import { vAutofocus } from '@/directives/vAutofocus';
 
 /** Store */
     const storeNotes = useStoreNotes()
@@ -33,6 +34,13 @@
         </tr>
         </tbody>
         </table>
+
+       <!-- <input
+          class="input"
+          type="text"
+          placeholder="hi"
+          v-autofocus
+        > -->
     </div>
 </template>
 
