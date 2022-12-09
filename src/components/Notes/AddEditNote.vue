@@ -7,7 +7,18 @@
         modelValue: {
             type: String,
             required: true
-        } 
+        },
+        bgColor: {
+            type: String,
+            default: 'success'
+        },
+        placeholder: {
+            type: String,
+            default: 'Type something...'
+        },
+        label: {
+            type: String
+        }
     })
     
 /** Emits */
@@ -29,8 +40,13 @@
 
 
 <template>
-    <div class="card has-background-success-dark mb-4">
+    <div
+      class="card mb-5"
+      :class="`has-background-${ bgColor }-dark`">
         <div class="card-content">
+            
+            <label v-if="label" class="label has-text-white ">{{props.label }}</label>
+
             <div class="field">
                 <div class="control">
                     <textarea
@@ -38,7 +54,7 @@
                         @input="$emit('update:modelValue', $event.target.value)"
                         class="textarea"
                         ref="textareaRef"
-                        placeholder="Add a new note..." 
+                        :placeholder="placeholder" 
                     />
                 </div>
             </div>

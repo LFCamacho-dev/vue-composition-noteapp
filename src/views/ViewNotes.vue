@@ -11,7 +11,7 @@
 /** Store */
     const storeNotes = useStoreNotes()
 
-    /** Imports */
+/** Imports */
 
 
 
@@ -44,6 +44,8 @@
     <AddEditNote
         v-model="newNote"
         ref="addEditNoteRef"
+        placeholder="Add a new note..."
+        
     >    
         <template #buttons>
             <button            
@@ -55,8 +57,6 @@
             </button>
         </template>
     </AddEditNote>
-
-    <pre>{{ newNote }}</pre>
 
 
 <!-- Card -->
