@@ -57,16 +57,18 @@
 
 <!-- Card -->
 
-    <div v-if="storeNotes.notes.length">
+    <div v-if="(storeNotes.notes.length && storeNotes.notesLoaded)">
         <Note
         v-for="note in storeNotes.notes"
         :key="note.id"
         :note="note" 
         />
     </div>
+    <div v-else-if="(!storeNotes.notes.length && storeNotes.notesLoaded)"><p class="is-size-5 has-text-centered has-text-grey-light is-family-monospace mt-6">You don't have any notes :)</p></div>
 
     <div v-else>
-        <p class="is-size-5 has-text-centered mt-6">You don't have any notes :)</p>
+        <!-- <p class="is-size-5 has-text-centered mt-6">You don't have any notes :)</p> -->
+        <progress v-if="!storeNotes.notesLoaded" class="progress is-large is-success" max="100" />
     </div>
     
 </div>
