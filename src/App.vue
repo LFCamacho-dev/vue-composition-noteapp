@@ -3,11 +3,11 @@
 /* Imports */
 	import { onMounted } from 'vue' 
 	import NavBar from '@/components/Layout/NavBar.vue'
-	import { useStoreNotes } from '@/stores/StoreNotes.js'	
+	import { useStoreAuth } from '@/stores/StoreAuth.js'	
 
 /** Store */
-	const storeNotes = useStoreNotes()
-	onMounted(() => storeNotes.getNotes())
+	const storeAuth = useStoreAuth()
+	onMounted(() => storeAuth.init())
 
 </script>
 
