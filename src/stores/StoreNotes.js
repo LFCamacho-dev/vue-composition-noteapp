@@ -1,23 +1,27 @@
 import { defineStore, acceptHMRUpdate } from 'pinia'
 import { ref, computed } from 'vue'
+import { useStoreAuth } from '@/stores/storeAuth'
 import { db } from '@/js/firebase.js'
 import { 
     collection, getDocs, onSnapshot, 
     doc, addDoc, deleteDoc, updateDoc, 
     query, orderBy, limit } from 'firebase/firestore'
 
-const notesCollectionRef = collection(db, 'notes')
-const notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'))
+let notesCollectionRef 
+let notesCollectionQuery
+
+let getNotesSnapshot = null
 
 export const useStoreNotes = defineStore('StoreNotes', () => {
-
-/** Data */
-
+    
+    /** Data */
+    
     const notes = ref([])
     const notesLoaded = false
 
-/** Computed / Getters */
-
+    
+    /** Computed / Getters */
+    
     const getNoteContent = computed(() => { 
         return (id) => {
             return notes.value.filter(note => note.id === id)[0].content
@@ -28,19 +32,29 @@ export const useStoreNotes = defineStore('StoreNotes', () => {
         const numNotes = notes.value.length
         return numNotes
     })
-
+    
     const totalNotesLength = computed(() => {
         let notesLength = 0
         notes.value.forEach(note => notesLength += note.content.length)
         return notesLength
     })
+    
 
-/** Actions */
+    /** Actions */    
+    
+    function init() {
+
+        const storeAuth = useStoreAuth()
+
+        notesCollectionRef = collection(db, 'users', storeAuth.user.id, 'notes')
+        notesCollectionQuery = query(notesCollectionRef, orderBy('date', 'desc'))
+        this.getNotes()
+    }
 
     async function getNotes() {
-        this.notesLoaded = false
-        onSnapshot(notesCollectionQuery, (querySnapshot) => {
-            // console.log(querySnapshot);
+        this.notesLoaded = false        
+
+        getNotesSnapshot = onSnapshot(notesCollectionQuery, (querySnapshot) => {
             let notes = []
             querySnapshot.forEach((doc) => {
                 let note = {
@@ -52,7 +66,15 @@ export const useStoreNotes = defineStore('StoreNotes', () => {
             })
             this.notes = notes
             this.notesLoaded = true
+        }, error => {
+            console.log('error.message: ', error.message);
         })
+        
+    }
+
+    function clearNotes(){
+        notes.value = []
+        if(getNotesSnapshot) getNotesSnapshot()  // Unsubscribe from any active listener
     }
 
     async function addNote(newNote) {
@@ -82,12 +104,14 @@ export const useStoreNotes = defineStore('StoreNotes', () => {
         notes,
         notesLoaded,
         getNotes,
+        init,
         addNote, 
         deleteNote, 
         updateNote, 
+        clearNotes,
         getNoteContent, 
         totalNotesCount,
-        totalNotesLength
+        totalNotesLength,
     }
 })
 

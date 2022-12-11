@@ -1,7 +1,7 @@
 <script setup>
 
 /** Imports */
-    import { ref, onMounted } from 'vue'
+    import { ref } from 'vue'
     import Note from '@/components/Notes/Note.vue'
     import AddEditNote from '@/components/Notes/AddEditNote.vue'
     import { useStoreNotes } from '@/stores/StoreNotes.js'
@@ -9,7 +9,7 @@
 
 /** Store */
 	const storeNotes = useStoreNotes()
-	onMounted(() => storeNotes.getNotes())
+	// onMounted(() => storeNotes.init())
 
 /** Notes */    
     const newNote = ref('')

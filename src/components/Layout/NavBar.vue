@@ -57,7 +57,7 @@
             >
                <div class="navbar-start">
                     <button
-                        v-if="storeAuth.user.uid"
+                        v-if="storeAuth.user.id"
                         @click="onLogout"
                         class="button is-small is-info mt-3">
                     Log out ({{storeAuth.user.email}})

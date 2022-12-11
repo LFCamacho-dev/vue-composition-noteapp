@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import { auth } from '@/js/firebase.js'
 import { createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, onAuthStateChanged, updateProfile } from 'firebase/auth'
 import { ref } from 'vue'
+import { useStoreNotes } from '@/stores/StoreNotes'
 
 
 
@@ -18,18 +19,20 @@ export const useStoreAuth = defineStore('StoreAuth', () => {
 /** Actions */
 
     function init(){
+
+        const storeNotes = useStoreNotes()
+
         onAuthStateChanged(auth, (usr) => {
             if (usr) { 
                 user.value.email = usr.email
-                user.value.uid = usr.uid
+                user.value.id = usr.uid
                 this.router.replace('/')
-                // console.log('el usuario es this:', user.value);
+                storeNotes.init()
             } else {
-                console.log('Not logged in')
-                user.value = {}
+                user.value = {}                
                 this.router.replace('/auth')
+                storeNotes.clearNotes()
             }
-
           })
     }
 
@@ -37,13 +40,10 @@ export const useStoreAuth = defineStore('StoreAuth', () => {
         createUserWithEmailAndPassword(auth, credentials.email, credentials.password)
         .then((userCredentials) => {
             const _user = userCredentials.user
-            //TODO register logs
-            console.log('User:', _user)
         })
         .then()
         .catch((error) => {
-            console.log('error.message', error.message)
-            
+            console.log('error.message', error.message)            
         })
     }
 
@@ -51,7 +51,7 @@ export const useStoreAuth = defineStore('StoreAuth', () => {
         signInWithEmailAndPassword(auth, credentials.email, credentials.password)
         .then((userCredential) => {
             const _user = userCredential.user
-            console.log('User:', _user)
+            // console.log('User:', _user)
         })
         .catch((error) => {
             console.log('error.message', error.message)
@@ -61,8 +61,7 @@ export const useStoreAuth = defineStore('StoreAuth', () => {
     function logoutUser(){
         signOut(auth)
         .then(() => {
-            //TODO logout logs
-            console.log('User Successfuly Logged out:', logoutUser);
+            // console.log('User Successfuly Logged out:', logoutUser);
             // this.router.replace('/auth')
       })
         .catch((error) => {
